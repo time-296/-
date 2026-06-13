@@ -136,9 +136,9 @@ h1 {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 8px;
+    padding: 6px;
     display: flex;
-    gap: 12px;
+    gap: 8px;
     margin-bottom: 20px;
     transition: border-color 0.2s ease;
     align-items: center;
@@ -167,7 +167,6 @@ h1 {
 /* 优先级选择器 */
 .priority-selector {
     display: flex;
-    flex-direction: column;
     gap: 0;
     background: var(--hover-bg);
     border-radius: 10px;
@@ -198,12 +197,11 @@ h1 {
     position: absolute;
     top: 4px;
     left: 4px;
-    right: 4px;
-    height: 38px;
+    height: calc(100% - 8px);
     background: var(--card-bg);
     border-radius: 8px;
     box-shadow: 0 1px 3px var(--shadow-color);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 0;
 }
 
