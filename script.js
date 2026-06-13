@@ -272,9 +272,7 @@
         if (!todo) return;
 
         const currentIdx = priorityOrder.indexOf(todo.priority || 'medium');
-        const nextIdx = (currentIdx + 1) % priorityOrder.length;
-        const nextPriority = priorityOrder[nextIdx];
-        const direction = nextIdx > currentIdx ? 'slide-down' : 'slide-up';
+        const nextPriority = priorityOrder[(currentIdx + 1) % priorityOrder.length];
 
         todos = todos.map(t => t.id === id ? { ...t, priority: nextPriority } : t);
         saveTodos();
@@ -283,10 +281,10 @@
         setTimeout(() => {
             const badge = document.querySelector(`.todo-item[data-id="${id}"] .priority-badge`);
             if (badge) {
-                badge.classList.remove('slide-up', 'slide-down');
+                badge.classList.remove('animating');
                 void badge.offsetWidth;
-                badge.classList.add(direction);
-                badge.addEventListener('animationend', () => badge.classList.remove(direction), { once: true });
+                badge.classList.add('animating');
+                badge.addEventListener('animationend', () => badge.classList.remove('animating'), { once: true });
             }
         }, 10);
     }
