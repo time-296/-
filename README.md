@@ -1,4 +1,4 @@
-# Todo App
+# 待办清单
 
 A simple todo application with dark/light theme support.
 
@@ -20,7 +20,7 @@ Open `index.html` in your browser.
 
 ---
 
-# Todo 应用
+# 待办清单
 
 一个简洁的待办事项应用，支持深色/浅色主题切换。
 
