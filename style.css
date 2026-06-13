@@ -205,21 +205,39 @@ h1 {
     cursor: pointer;
     flex-shrink: 0;
     user-select: none;
-    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.priority-badge::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--card-bg);
+    opacity: 0;
+    transition: opacity 0.2s ease;
 }
 
 .priority-badge:active {
-    transform: scale(0.9);
+    transform: scale(0.95);
 }
 
-@keyframes priorityPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.15); }
-    100% { transform: scale(1); }
+@keyframes slideUp {
+    0% { transform: translateY(100%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
 }
 
-.priority-badge.animating {
-    animation: priorityPulse 0.3s ease;
+@keyframes slideDown {
+    0% { transform: translateY(-100%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+.priority-badge.slide-up {
+    animation: slideUp 0.25s ease;
+}
+
+.priority-badge.slide-down {
+    animation: slideDown 0.25s ease;
 }
 
 .priority-high {

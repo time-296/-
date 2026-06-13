@@ -268,19 +268,22 @@
 
     function cyclePriority(id) {
         const priorityOrder = ['high', 'medium', 'low'];
-        todos = todos.map(todo => {
-            if (todo.id !== id) return todo;
-            const currentIdx = priorityOrder.indexOf(todo.priority || 'medium');
-            const nextPriority = priorityOrder[(currentIdx + 1) % priorityOrder.length];
-            return { ...todo, priority: nextPriority };
-        });
+        const todo = todos.find(t => t.id === id);
+        if (!todo) return;
+
+        const currentIdx = priorityOrder.indexOf(todo.priority || 'medium');
+        const nextIdx = (currentIdx + 1) % priorityOrder.length;
+        const nextPriority = priorityOrder[nextIdx];
+        const direction = nextIdx > currentIdx ? 'slide-up' : 'slide-down';
+
+        todos = todos.map(t => t.id === id ? { ...t, priority: nextPriority } : t);
         saveTodos();
         renderTodos();
 
         const badge = document.querySelector(`.todo-item[data-id="${id}"] .priority-badge`);
         if (badge) {
-            badge.classList.add('animating');
-            badge.addEventListener('animationend', () => badge.classList.remove('animating'), { once: true });
+            badge.classList.add(direction);
+            badge.addEventListener('animationend', () => badge.classList.remove(direction), { once: true });
         }
     }
 
