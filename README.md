@@ -1,5 +1,27 @@
 # Todo App
 
+A simple todo application with dark/light theme support.
+
+## Features
+
+- Add, edit, and delete todos
+- Mark as complete/incomplete
+- Dark/light theme toggle
+- Local data persistence (localStorage)
+
+## Usage
+
+Open `index.html` in your browser.
+
+## Tech Stack
+
+- HTML / CSS / JavaScript
+- No dependencies, no build tools required
+
+---
+
+# Todo 应用
+
 一个简洁的待办事项应用，支持深色/浅色主题切换。
 
 ## 功能
