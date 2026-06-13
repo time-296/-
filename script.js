@@ -274,17 +274,19 @@
         const currentIdx = priorityOrder.indexOf(todo.priority || 'medium');
         const nextIdx = (currentIdx + 1) % priorityOrder.length;
         const nextPriority = priorityOrder[nextIdx];
-        const direction = nextIdx > currentIdx ? 'slide-up' : 'slide-down';
+        const direction = nextIdx > currentIdx ? 'slide-down' : 'slide-up';
 
         todos = todos.map(t => t.id === id ? { ...t, priority: nextPriority } : t);
         saveTodos();
         renderTodos();
 
-        const badge = document.querySelector(`.todo-item[data-id="${id}"] .priority-badge`);
-        if (badge) {
-            badge.classList.add(direction);
-            badge.addEventListener('animationend', () => badge.classList.remove(direction), { once: true });
-        }
+        requestAnimationFrame(() => {
+            const badge = document.querySelector(`.todo-item[data-id="${id}"] .priority-badge`);
+            if (badge) {
+                badge.classList.add(direction);
+                badge.addEventListener('animationend', () => badge.classList.remove(direction), { once: true });
+            }
+        });
     }
 
     // ========== 编辑（双击） ==========

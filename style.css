@@ -398,6 +398,7 @@ h1 {
     gap: 14px;
     transition: all 0.15s ease;
     animation: slideIn 0.2s ease-out;
+    overflow: hidden;
 }
 
 @keyframes slideIn {
