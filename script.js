@@ -204,7 +204,8 @@
         }
 
         todoList.innerHTML = filteredTodos.map(todo => `
-            <div class="todo-item ${todo.completed ? 'completed' : ''}" data-id="${todo.id}">
+            <div class="todo-item ${todo.completed ? 'completed' : ''}" data-id="${todo.id}" draggable="true">
+                <div class="drag-handle">⋮</div>
                 <div class="check-circle ${todo.completed ? 'completed' : ''}"></div>
                 <span class="priority-badge priority-${todo.priority || 'medium'}">${todo.priority === 'high' ? '高' : todo.priority === 'low' ? '低' : '中'}</span>
                 <span class="todo-text">${escapeHtml(todo.text)}</span>
@@ -326,6 +327,8 @@
     }
 
     // ========== 事件委托 ==========
+    let draggedId = null;
+
     todoList.addEventListener('click', (e) => {
         const item = e.target.closest('.todo-item');
         if (!item) return;
@@ -339,7 +342,61 @@
         const item = e.target.closest('.todo-item');
         if (!item) return;
         if (e.target.classList.contains('check-circle') || e.target.classList.contains('delete-btn')) return;
+        if (e.target.classList.contains('drag-handle')) return;
         startEdit(item.dataset.id, item);
+    });
+
+    // ========== 拖拽排序 ==========
+    todoList.addEventListener('dragstart', (e) => {
+        const item = e.target.closest('.todo-item');
+        if (!item) return;
+        draggedId = item.dataset.id;
+        item.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', item.dataset.id);
+    });
+
+    todoList.addEventListener('dragend', (e) => {
+        const item = e.target.closest('.todo-item');
+        if (item) item.classList.remove('dragging');
+        draggedId = null;
+        document.querySelectorAll('.todo-item').forEach(el => el.classList.remove('drag-over'));
+    });
+
+    todoList.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+    });
+
+    todoList.addEventListener('dragenter', (e) => {
+        e.preventDefault();
+        const item = e.target.closest('.todo-item');
+        if (!item || item.dataset.id === draggedId) return;
+        item.classList.add('drag-over');
+    });
+
+    todoList.addEventListener('dragleave', (e) => {
+        const item = e.target.closest('.todo-item');
+        if (item && !item.contains(e.relatedTarget)) {
+            item.classList.remove('drag-over');
+        }
+    });
+
+    todoList.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const item = e.target.closest('.todo-item');
+        if (!item) return;
+        const targetId = item.dataset.id;
+        if (targetId === draggedId) return;
+
+        const fromIdx = todos.findIndex(t => t.id === draggedId);
+        const toIdx = todos.findIndex(t => t.id === targetId);
+        if (fromIdx === -1 || toIdx === -1) return;
+
+        const [moved] = todos.splice(fromIdx, 1);
+        todos.splice(toIdx, 0, moved);
+        saveTodos();
+        renderTodos();
     });
 
     // ========== 其他事件 ==========
