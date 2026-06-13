@@ -276,6 +276,12 @@
         });
         saveTodos();
         renderTodos();
+
+        const badge = document.querySelector(`.todo-item[data-id="${id}"] .priority-badge`);
+        if (badge) {
+            badge.classList.add('animating');
+            badge.addEventListener('animationend', () => badge.classList.remove('animating'), { once: true });
+        }
     }
 
     // ========== 编辑（双击） ==========
