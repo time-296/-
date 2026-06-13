@@ -4,6 +4,7 @@
     // DOM 元素引用
     const todoInput = document.getElementById('todo-input');
     const addBtn = document.getElementById('add-btn');
+    const prioritySelect = document.getElementById('priority-select');
     const todoList = document.getElementById('todo-list');
     const filterBtns = document.querySelectorAll('.filter-btn');
     const stats = document.getElementById('stats');
@@ -203,6 +204,7 @@
         todoList.innerHTML = filteredTodos.map(todo => `
             <div class="todo-item ${todo.completed ? 'completed' : ''}" data-id="${todo.id}">
                 <div class="check-circle ${todo.completed ? 'completed' : ''}"></div>
+                <span class="priority-badge priority-${todo.priority || 'medium'}">${todo.priority === 'high' ? '高' : todo.priority === 'low' ? '低' : '中'}</span>
                 <span class="todo-text">${escapeHtml(todo.text)}</span>
                 <button class="delete-btn">×</button>
             </div>
@@ -214,7 +216,7 @@
         const text = todoInput.value.trim();
         if (!text) return;
 
-        todos.push({ id: newId(), text, completed: false });
+        todos.push({ id: newId(), text, completed: false, priority: prioritySelect.value });
         saveTodos();
         todoInput.value = '';
         renderTodos();
@@ -263,6 +265,18 @@
         completedCount.textContent = completed;
     }
 
+    function cyclePriority(id) {
+        const priorityOrder = ['high', 'medium', 'low'];
+        todos = todos.map(todo => {
+            if (todo.id !== id) return todo;
+            const currentIdx = priorityOrder.indexOf(todo.priority || 'medium');
+            const nextPriority = priorityOrder[(currentIdx + 1) % priorityOrder.length];
+            return { ...todo, priority: nextPriority };
+        });
+        saveTodos();
+        renderTodos();
+    }
+
     // ========== 编辑（双击） ==========
     function startEdit(id, item) {
         const todo = todos.find(t => t.id === id);
@@ -305,6 +319,7 @@
         const id = item.dataset.id;
         if (e.target.classList.contains('check-circle')) toggleTodo(id);
         if (e.target.classList.contains('delete-btn')) deleteTodo(id);
+        if (e.target.classList.contains('priority-badge')) cyclePriority(id);
     });
 
     todoList.addEventListener('dblclick', (e) => {
