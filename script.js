@@ -5,6 +5,7 @@
     const todoInput = document.getElementById('todo-input');
     const addBtn = document.getElementById('add-btn');
     const priorityBtns = document.querySelectorAll('.priority-btn');
+    const prioritySlider = document.getElementById('priority-slider');
     const todoList = document.getElementById('todo-list');
     const filterBtns = document.querySelectorAll('.filter-btn');
     const stats = document.getElementById('stats');
@@ -352,8 +353,19 @@
             priorityBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentPriority = btn.dataset.priority;
+            moveSlider(btn);
         });
     });
+
+    function moveSlider(btn) {
+        const selector = document.getElementById('priority-selector');
+        const selectorRect = selector.getBoundingClientRect();
+        const btnRect = btn.getBoundingClientRect();
+        prioritySlider.style.width = btnRect.width + 'px';
+        prioritySlider.style.transform = `translateX(${btnRect.left - selectorRect.left - 4}px)`;
+    }
+
+    moveSlider(document.querySelector('.priority-btn.active'));
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
