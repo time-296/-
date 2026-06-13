@@ -280,13 +280,15 @@
         saveTodos();
         renderTodos();
 
-        requestAnimationFrame(() => {
+        setTimeout(() => {
             const badge = document.querySelector(`.todo-item[data-id="${id}"] .priority-badge`);
             if (badge) {
+                badge.classList.remove('slide-up', 'slide-down');
+                void badge.offsetWidth;
                 badge.classList.add(direction);
                 badge.addEventListener('animationend', () => badge.classList.remove(direction), { once: true });
             }
-        });
+        }, 10);
     }
 
     // ========== 编辑（双击） ==========
