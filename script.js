@@ -4,7 +4,7 @@
     // DOM 元素引用
     const todoInput = document.getElementById('todo-input');
     const addBtn = document.getElementById('add-btn');
-    const prioritySelect = document.getElementById('priority-select');
+    const priorityBtns = document.querySelectorAll('.priority-btn');
     const todoList = document.getElementById('todo-list');
     const filterBtns = document.querySelectorAll('.filter-btn');
     const stats = document.getElementById('stats');
@@ -137,6 +137,7 @@
 
     let todos = loadTodos();
     let currentFilter = 'all';
+    let currentPriority = 'medium';
     let idCounter = 0;
 
     function newId() {
@@ -216,7 +217,7 @@
         const text = todoInput.value.trim();
         if (!text) return;
 
-        todos.push({ id: newId(), text, completed: false, priority: prioritySelect.value });
+        todos.push({ id: newId(), text, completed: false, priority: currentPriority });
         saveTodos();
         todoInput.value = '';
         renderTodos();
@@ -334,6 +335,14 @@
     todoInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') addTodo(); });
     clearCompletedBtn.addEventListener('click', clearCompleted);
     clearAllBtn.addEventListener('click', clearAll);
+
+    priorityBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            priorityBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentPriority = btn.dataset.priority;
+        });
+    });
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {

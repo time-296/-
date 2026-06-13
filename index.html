@@ -33,12 +33,12 @@
             </header>
 
             <div class="input-section">
-                <select id="priority-select">
-                    <option value="high">高</option>
-                    <option value="medium" selected>中</option>
-                    <option value="low">低</option>
-                </select>
                 <input type="text" id="todo-input" placeholder="添加新任务...">
+                <div class="priority-selector">
+                    <button class="priority-btn active" data-priority="medium">中</button>
+                    <button class="priority-btn" data-priority="high">高</button>
+                    <button class="priority-btn" data-priority="low">低</button>
+                </div>
                 <button id="add-btn">添加</button>
             </div>
         </div>
