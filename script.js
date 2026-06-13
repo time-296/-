@@ -8,9 +8,10 @@
     const prioritySlider = document.getElementById('priority-slider');
     const todoList = document.getElementById('todo-list');
     const filterBtns = document.querySelectorAll('.filter-btn');
+    const stats = document.getElementById('stats');
+    const totalCount = document.getElementById('total-count');
     const activeCount = document.getElementById('active-count');
-    const totalCountAction = document.getElementById('total-count-action');
-    const completedCountAction = document.getElementById('completed-count-action');
+    const completedCount = document.getElementById('completed-count');
     const themeToggle = document.getElementById('theme-toggle');
     const themeIcon = document.getElementById('theme-icon');
     const clearCompletedBtn = document.getElementById('clear-completed');
@@ -173,9 +174,18 @@
                     <p>添加您的第一个任务开始吧</p>
                 </div>
             `;
-            updateStats();
+            stats.style.display = 'none';
+            clearCompletedBtn.style.display = 'none';
+            clearAllBtn.style.display = 'none';
             return;
         }
+
+        stats.style.display = 'flex';
+        updateStats();
+
+        const completedCount = todos.filter(t => t.completed).length;
+        clearCompletedBtn.style.display = completedCount > 0 ? 'inline-block' : 'none';
+        clearAllBtn.style.display = 'inline-block';
 
         if (filteredTodos.length === 0) {
             todoList.innerHTML = `
@@ -201,8 +211,6 @@
                 <button class="delete-btn">×</button>
             </div>
         `).join('');
-
-        updateStats();
     }
 
     // ========== CRUD ==========
@@ -254,11 +262,9 @@
     function updateStats() {
         const total = todos.length;
         const completed = todos.filter(t => t.completed).length;
-        const active = total - completed;
-
-        totalCountAction.textContent = total;
-        completedCountAction.textContent = completed;
-        activeCount.textContent = active + ' 进行中';
+        totalCount.textContent = total;
+        activeCount.textContent = total - completed;
+        completedCount.textContent = completed;
     }
 
     function cyclePriority(id) {
@@ -336,14 +342,11 @@
         startEdit(item.dataset.id, item);
     });
 
-    // ========== 优先级选择器 ==========
-    function moveSlider(btn) {
-        const selector = document.getElementById('priority-selector');
-        const selectorRect = selector.getBoundingClientRect();
-        const btnRect = btn.getBoundingClientRect();
-        prioritySlider.style.width = btnRect.width + 'px';
-        prioritySlider.style.transform = `translateX(${btnRect.left - selectorRect.left - 3}px)`;
-    }
+    // ========== 其他事件 ==========
+    addBtn.addEventListener('click', addTodo);
+    todoInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') addTodo(); });
+    clearCompletedBtn.addEventListener('click', clearCompleted);
+    clearAllBtn.addEventListener('click', clearAll);
 
     priorityBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -354,13 +357,15 @@
         });
     });
 
-    moveSlider(document.querySelector('.priority-btn.active'));
+    function moveSlider(btn) {
+        const selector = document.getElementById('priority-selector');
+        const selectorRect = selector.getBoundingClientRect();
+        const btnRect = btn.getBoundingClientRect();
+        prioritySlider.style.width = btnRect.width + 'px';
+        prioritySlider.style.transform = `translateX(${btnRect.left - selectorRect.left - 4}px)`;
+    }
 
-    // ========== 其他事件 ==========
-    addBtn.addEventListener('click', addTodo);
-    todoInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') addTodo(); });
-    clearCompletedBtn.addEventListener('click', clearCompleted);
-    clearAllBtn.addEventListener('click', clearAll);
+    moveSlider(document.querySelector('.priority-btn.active'));
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {

@@ -42,40 +42,17 @@
                 </div>
                 <button id="add-btn">添加</button>
             </div>
-
-            <div class="actions-section">
-                <button class="action-btn" id="clear-completed">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="3 6 5 6 21 6"/>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                    </svg>
-                    <span>清除已完成</span>
-                    <span class="count" id="completed-count-action">0</span>
-                </button>
-                <button class="action-btn danger" id="clear-all">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"/>
-                        <line x1="15" y1="9" x2="9" y2="15"/>
-                        <line x1="9" y1="9" x2="15" y2="15"/>
-                    </svg>
-                    <span>清除全部待办</span>
-                    <span class="count" id="total-count-action">0</span>
-                </button>
-            </div>
         </div>
 
         <div class="right-pane">
-            <div class="filter-section">
-                <div class="filter-row">
-                    <div class="filter-tabs">
-                        <button class="filter-btn active" data-filter="all">全部</button>
-                        <button class="filter-btn" data-filter="active">进行中</button>
-                        <button class="filter-btn" data-filter="completed">已完成</button>
-                    </div>
-                    <div class="filter-stats">
-                        <span class="active-count" id="active-count">0 进行中</span>
-                    </div>
+            <div class="filter-row">
+                <div class="filter-tabs">
+                    <button class="filter-btn active" data-filter="all">全部</button>
+                    <button class="filter-btn" data-filter="active">进行中</button>
+                    <button class="filter-btn" data-filter="completed">已完成</button>
                 </div>
+                <button class="clear-completed-btn" id="clear-completed">清除已完成</button>
+                <button class="clear-all-btn" id="clear-all">清除全部待办</button>
             </div>
 
             <div class="todo-list" id="todo-list">
@@ -86,6 +63,21 @@
                     </svg>
                     <h3>暂无任务</h3>
                     <p>添加您的第一个任务开始吧</p>
+                </div>
+            </div>
+
+            <div class="stats" id="stats" style="display: none;">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-count">0</div>
+                    <div class="stat-label">总数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="active-count">0</div>
+                    <div class="stat-label">进行中</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="completed-count">0</div>
+                    <div class="stat-label">已完成</div>
                 </div>
             </div>
         </div>
