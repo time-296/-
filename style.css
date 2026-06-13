@@ -136,11 +136,12 @@ h1 {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 4px;
+    padding: 8px;
     display: flex;
-    gap: 8px;
+    gap: 12px;
     margin-bottom: 20px;
     transition: border-color 0.2s ease;
+    align-items: center;
 }
 
 .input-section:focus-within {
@@ -199,7 +200,7 @@ h1 {
 .priority-badge {
     font-size: 0.6875rem;
     font-weight: 600;
-    padding: 2px 8px;
+    padding: 3px 10px;
     border-radius: 4px;
     cursor: pointer;
     flex-shrink: 0;
@@ -351,17 +352,17 @@ h1 {
 .todo-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .todo-item {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 10px;
-    padding: 14px 16px;
+    padding: 14px 18px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     transition: all 0.15s ease;
     animation: slideIn 0.2s ease-out;
 }
