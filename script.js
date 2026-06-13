@@ -361,8 +361,7 @@
         const selector = document.getElementById('priority-selector');
         const selectorRect = selector.getBoundingClientRect();
         const btnRect = btn.getBoundingClientRect();
-        prioritySlider.style.width = btnRect.width + 'px';
-        prioritySlider.style.transform = `translateX(${btnRect.left - selectorRect.left - 4}px)`;
+        prioritySlider.style.transform = `translateY(${btnRect.top - selectorRect.top - 4}px)`;
     }
 
     moveSlider(document.querySelector('.priority-btn.active'));
