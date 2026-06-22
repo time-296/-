@@ -22,7 +22,8 @@
 
     function getSavedTheme() {
         const saved = localStorage.getItem(THEME_KEY);
-        return (saved === 'light' || saved === 'dark') ? saved : 'light';
+        // 支持 'light' | 'dark' | 'auto'，默认 'auto'
+        return (saved === 'light' || saved === 'dark' || saved === 'auto') ? saved : 'auto';
     }
 
     function applyTheme(theme) {
@@ -77,11 +78,21 @@
 
     applyTheme(getSavedTheme());
 
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-        if (getSavedTheme() === 'auto') {
-            updateThemeIcon('auto');
-        }
-    });
+    // matchMedia 兼容性处理（老浏览器 use addListener）
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) {
+        mq.addEventListener('change', () => {
+            if (getSavedTheme() === 'auto') {
+                updateThemeIcon('auto');
+            }
+        });
+    } else if (mq.addListener) {
+        mq.addListener(() => {
+            if (getSavedTheme() === 'auto') {
+                updateThemeIcon('auto');
+            }
+        });
+    }
 
     themeToggle.addEventListener('click', (e) => { e.preventDefault(); toggleTheme(); });
     themeToggle.addEventListener('contextmenu', (e) => { e.preventDefault(); resetTheme(); });
@@ -183,8 +194,8 @@
         stats.style.display = 'flex';
         updateStats();
 
-        const completedCount = todos.filter(t => t.completed).length;
-        clearCompletedBtn.style.display = completedCount > 0 ? 'inline-block' : 'none';
+        const completedNum = todos.filter(t => t.completed).length;
+        clearCompletedBtn.style.display = completedNum > 0 ? 'inline-block' : 'none';
         clearAllBtn.style.display = 'inline-block';
 
         if (filteredTodos.length === 0) {
@@ -205,11 +216,11 @@
 
         todoList.innerHTML = filteredTodos.map(todo => `
             <div class="todo-item ${todo.completed ? 'completed' : ''}" data-id="${todo.id}" draggable="true">
-                <div class="drag-handle">⋮</div>
-                <div class="check-circle ${todo.completed ? 'completed' : ''}"></div>
-                <span class="priority-badge priority-${todo.priority || 'medium'}">${todo.priority === 'high' ? '高' : todo.priority === 'low' ? '低' : '中'}</span>
+                <div class="drag-handle" role="button" aria-label="拖动以排序" tabindex="0">⋮</div>
+                <div class="check-circle ${todo.completed ? 'completed' : ''}" role="button" aria-label="切换完成状态"></div>
+                <span class="priority-badge priority-${todo.priority || 'medium'}" role="button" tabindex="0" aria-label="切换优先级">${todo.priority === 'high' ? '高' : todo.priority === 'low' ? '低' : '中'}</span>
                 <span class="todo-text">${escapeHtml(todo.text)}</span>
-                <button class="delete-btn">×</button>
+                <button class="delete-btn" aria-label="删除任务">×</button>
             </div>
         `).join('');
     }
@@ -321,8 +332,7 @@
         textEl.addEventListener('blur', finishEdit, { once: true });
         textEl.addEventListener('keydown', function handler(e) {
             if (e.key === 'Enter') { e.preventDefault(); textEl.blur(); }
-            if (e.key === 'Escape') { textEl.textContent = todo.text; textEl.blur(); }
-            if (e.key === 'Escape') textEl.removeEventListener('keydown', handler);
+            if (e.key === 'Escape') { textEl.textContent = todo.text; textEl.blur(); textEl.removeEventListener('keydown', handler); }
         });
     }
 
@@ -394,7 +404,8 @@
         if (fromIdx === -1 || toIdx === -1) return;
 
         const [moved] = todos.splice(fromIdx, 1);
-        todos.splice(toIdx, 0, moved);
+        const insertIdx = fromIdx < toIdx ? toIdx - 1 : toIdx;
+        todos.splice(insertIdx, 0, moved);
         saveTodos();
         renderTodos();
     });
@@ -416,13 +427,15 @@
 
     function moveSlider(btn) {
         const selector = document.getElementById('priority-selector');
+        if (!selector || !btn) return;
         const selectorRect = selector.getBoundingClientRect();
         const btnRect = btn.getBoundingClientRect();
         prioritySlider.style.width = btnRect.width + 'px';
         prioritySlider.style.transform = `translateX(${btnRect.left - selectorRect.left - 4}px)`;
     }
 
-    moveSlider(document.querySelector('.priority-btn.active'));
+    const activeBtn = document.querySelector('.priority-btn.active');
+    if (activeBtn) moveSlider(activeBtn);
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
